@@ -1,6 +1,6 @@
 const http = require('http');
 
-
+// Method request
 const requestListener = (request, response) => {
     response.setHeader('Content-Type', 'text/html');
     response.statusCode = 200;
@@ -12,19 +12,44 @@ const requestListener = (request, response) => {
     }
 
     if(method === 'POST'){
-        response.end('<h1>Hai!</h1>');
+       let body = [];
+
+       request.on('data', (chunck) => {
+        body.push(chunck);
+       });
+
+       request.on('end', () => {
+        body = Buffer.concat(body).toString();
+        const {name} = JSON.parse(body);
+        response.end(`<h1>Hai, ${name}!</h1>`);
+       });
     }
 
-    if (method === 'PUT') {
-        response.end('<h1>Bonjour!</h1>')
-    }
+    // if (method === 'PUT') {
+    //     response.end('<h1>Bonjour!</h1>')
+    // }
 
-    if (method === 'DELETE') {
-        response.end('<h1>Salam!</h1>')
-    }
+    // if (method === 'DELETE') {
+    //     response.end('<h1>Salam!</h1>')
+    // }
 
 };
 
+
+// Body Request dengan stream request
+// const requestListener = (request, response) => {
+//     let body = [];
+
+//     request.on('data', (chunck) => {
+//         body.push(chunck);
+//     });
+
+//     request.on('end', () => {
+//         body = Buffer.concat(body).toString();
+//     });
+
+    
+// }
 const server = http.createServer(requestListener);
 
 const port = 5000;
