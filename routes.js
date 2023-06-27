@@ -21,6 +21,20 @@ const routes  = [
             return `hello, ${name}!`;
         },
     },
+    {
+        method: 'GET',
+        path:'/hello/herya/{name?}',
+        handler: (request, h) => {
+            const { name= "stranger"} = request.params;
+            const { lang } = request.query;
+
+            if(lang === 'id'){
+                return `Hai, ${name}`;
+            }
+
+            return `Hello, ${name}`;
+        },
+    },
 ];
 
 module.exports = routes;
