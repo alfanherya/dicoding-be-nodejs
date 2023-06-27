@@ -1,97 +1,114 @@
-const http = require('http');
+const Hapi = require('@hapi/hapi');
+const routes = require('./routes');
 
-// Method request
-const requestListener = (request, response) => {
-    response.setHeader('Content-Type', 'text/html');
-   
+const init = async () => {
+    const server = Hapi.server({
+        port: 5000,
+        host:'localhost',
+    });
 
-    const {method, url} = request;
-    if(url === '/') {
-        if(method === 'GET'){
-            response.statusCode = 200;
-            response.end('<h1>Ini Adalah Homepage</h1>')
-        }else{
-            response.statusCode = 400;
-            response.end(`<h1>halaman tidak dapat diakses dengan ${method} request</h1>`)
-        }
-    }else if(url === '/about'){
-        if(method === 'GET'){
-            response.statusCode = 200;
-            response.end('<h1>Halo! ini adalah halaman about</h1>')
-        }else if(method === 'POST'){
-            let body = [];
+    server.route(routes);
 
-            request.on('data', (chunck) => {
-                body.push(chunck);
-            });
-
-            request.on('end', () => {
-                body = Buffer.concat(body).toString();
-                const {name} = JSON.parse(body);
-                response.statusCode = 200;
-                response.end(`<h1>Halo, ${name}! ini adalah halaman about</h1`);
-
-            });
-        }else{
-            response.statusCode = 400;
-            response.end(`<h1>Halaman tidak dapat diakses menggunakan ${method} request</h1>`);
-
-        }
-    }else{
-        response.statusCode = 400;
-        response.end('<h1>Halaman tidak ditemukan!</h1>');
-    }
-
-
-    //function logic body request version 2
-    // if(method === 'GET') {
-    //     response.end('<h1>Hello!</h1>');
-    // }
-
-    // if(method === 'POST'){
-    //    let body = [];
-
-    //    request.on('data', (chunck) => {
-    //     body.push(chunck);
-    //    });
-
-    //    request.on('end', () => {
-    //     body = Buffer.concat(body).toString();
-    //     const {name} = JSON.parse(body);
-    //     response.end(`<h1>Hai, ${name}!</h1>`);
-    //    });
-    // }
-
-    // if (method === 'PUT') {
-    //     response.end('<h1>Bonjour!</h1>')
-    // }
-
-    // if (method === 'DELETE') {
-    //     response.end('<h1>Salam!</h1>')
-    // }
-
+    await server.start();
+    console.log(`Server berjalan pada ${server.info.uri}`);
 };
 
+init();
 
-// Body Request dengan stream request
+// const http = require('http');
+
+// // Method request
 // const requestListener = (request, response) => {
-//     let body = [];
+//     response.setHeader('Content-Type', 'text/html');
+   
 
-//     request.on('data', (chunck) => {
-//         body.push(chunck);
-//     });
+//     const {method, url} = request;
+//     if(url === '/') {
+//         if(method === 'GET'){
+//             response.statusCode = 200;
+//             response.end('<h1>Ini Adalah Homepage</h1>')
+//         }else{
+//             response.statusCode = 400;
+//             response.end(`<h1>halaman tidak dapat diakses dengan ${method} request</h1>`)
+//         }
+//     }else if(url === '/about'){
+//         if(method === 'GET'){
+//             response.statusCode = 200;
+//             response.end('<h1>Halo! ini adalah halaman about</h1>')
+//         }else if(method === 'POST'){
+//             let body = [];
 
-//     request.on('end', () => {
-//         body = Buffer.concat(body).toString();
-//     });
+//             request.on('data', (chunck) => {
+//                 body.push(chunck);
+//             });
+
+//             request.on('end', () => {
+//                 body = Buffer.concat(body).toString();
+//                 const {name} = JSON.parse(body);
+//                 response.statusCode = 200;
+//                 response.end(`<h1>Halo, ${name}! ini adalah halaman about</h1`);
+
+//             });
+//         }else{
+//             response.statusCode = 400;
+//             response.end(`<h1>Halaman tidak dapat diakses menggunakan ${method} request</h1>`);
+
+//         }
+//     }else{
+//         response.statusCode = 400;
+//         response.end('<h1>Halaman tidak ditemukan!</h1>');
+//     }
+
+
+//     //function logic body request version 2
+//     // if(method === 'GET') {
+//     //     response.end('<h1>Hello!</h1>');
+//     // }
+
+//     // if(method === 'POST'){
+//     //    let body = [];
+
+//     //    request.on('data', (chunck) => {
+//     //     body.push(chunck);
+//     //    });
+
+//     //    request.on('end', () => {
+//     //     body = Buffer.concat(body).toString();
+//     //     const {name} = JSON.parse(body);
+//     //     response.end(`<h1>Hai, ${name}!</h1>`);
+//     //    });
+//     // }
+
+//     // if (method === 'PUT') {
+//     //     response.end('<h1>Bonjour!</h1>')
+//     // }
+
+//     // if (method === 'DELETE') {
+//     //     response.end('<h1>Salam!</h1>')
+//     // }
+
+// };
+
+
+// // Body Request dengan stream request
+// // const requestListener = (request, response) => {
+// //     let body = [];
+
+// //     request.on('data', (chunck) => {
+// //         body.push(chunck);
+// //     });
+
+// //     request.on('end', () => {
+// //         body = Buffer.concat(body).toString();
+// //     });
 
     
-// }
-const server = http.createServer(requestListener);
+// // }
+// const server = http.createServer(requestListener);
 
-const port = 5000;
-const host =  'localhost';
+// const port = 5000;
+// const host =  'localhost';
 
-server.listen(port, host, () => {
-    console.log(`Server berjalan pada http://${host}:${port}`);
-})
+// server.listen(port, host, () => {
+//     console.log(`Server berjalan pada http://${host}:${port}`);
+// })
